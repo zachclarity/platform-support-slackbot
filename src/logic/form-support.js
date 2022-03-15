@@ -20,13 +20,14 @@ module.exports = function (logger) {
     const { id, username } = body.user;
     const {
       users_requesting_support: users,
+      team,
       topic,
       category,
       summary,
     } = view.state.values;
 
-    const selectedTeamId = topic.selected.selected_option.value;
-    const selectedCategoryId = category.selected.selected_option.value;
+    const selectedTeamId = team.selected.selected_option.value;
+    const selectedTopicId = topic.selected.selected_option.value;
     const whoNeedsSupportUserIds = users?.users?.selected_users ?? [];
     const summaryDescription = summary.value.value;
 
@@ -48,12 +49,12 @@ module.exports = function (logger) {
         }
       : {};
 
-    const categoryData = await sheets.getCategoryById(selectedCategoryId);
+    const topicData = await sheets.getTopicById(selectedTopicId);
 
-    const selectedCategory = categoryData
+    const selectedTopic = topicData
       ? {
-          id: selectedCategoryId,
-          name: categoryData.Name
+          id: selectedTopicId,
+          name: topicData.Name
         }
       : {};
 
@@ -64,7 +65,7 @@ module.exports = function (logger) {
       },
       whoNeedsSupport,
       selectedTeam,
-      selectedCategory,
+      selectedTopic,
       summaryDescription,
     };
   };
@@ -109,7 +110,7 @@ module.exports = function (logger) {
         ticketId,
         formData.submittedBy.id,
         formData.selectedTeam.name,
-        formData.selectedCategory.name,
+        formData.selectedTopic.name,
         formData.summaryDescription,
         oncallUser,
         formData.selectedTeam.name
